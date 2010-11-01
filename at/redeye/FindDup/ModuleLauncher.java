@@ -79,6 +79,7 @@ public class ModuleLauncher extends BaseModuleLauncher {
                 sb.append(root.MlM("c:\\programme") + " ");
                 sb.append("c:\\syswow64 ");
                 sb.append("c:\\RECYCLED ");
+                sb.append("c:\\Program Files ");
            }
            else
            {
