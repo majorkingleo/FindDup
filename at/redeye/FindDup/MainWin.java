@@ -98,6 +98,16 @@ public class MainWin extends BaseDialog {
 
         initMessages();
 
+
+        if (!DesktopLauncher.canCreateDesktopIcon())
+        {
+            jMCreateDesktopIcon.setVisible(false);
+        }
+        else
+        {
+            jMCreateDesktopIcon.setEnabled(false);
+        }
+
     }
 
     private void initMessages() {
@@ -177,7 +187,7 @@ public class MainWin extends BaseDialog {
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMSettings = new javax.swing.JMenuItem();
-        jMCreateDesktopIcon3 = new javax.swing.JMenuItem();
+        jMCreateDesktopIcon = new javax.swing.JMenuItem();
         jMQuit = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
         jMAbout = new javax.swing.JMenuItem();
@@ -302,7 +312,7 @@ public class MainWin extends BaseDialog {
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 182, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 183, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -316,13 +326,13 @@ public class MainWin extends BaseDialog {
         });
         jMenu1.add(jMSettings);
 
-        jMCreateDesktopIcon3.setText("Desktop Icon erstellen");
-        jMCreateDesktopIcon3.addActionListener(new java.awt.event.ActionListener() {
+        jMCreateDesktopIcon.setText("Desktop Icon erstellen");
+        jMCreateDesktopIcon.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMCreateDesktopIcon3ActionPerformed(evt);
+                jMCreateDesktopIconActionPerformed(evt);
             }
         });
-        jMenu1.add(jMCreateDesktopIcon3);
+        jMenu1.add(jMCreateDesktopIcon);
 
         jMQuit.setText("Beenden");
         jMQuit.addActionListener(new java.awt.event.ActionListener() {
@@ -508,7 +518,7 @@ public class MainWin extends BaseDialog {
         invokeDialogUnique(new AboutPlugins(root));
     }//GEN-LAST:event_jMPluginActionPerformed
 
-    private void jMCreateDesktopIcon3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMCreateDesktopIcon3ActionPerformed
+    private void jMCreateDesktopIconActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMCreateDesktopIconActionPerformed
 
         DesktopLauncher launcher = new DesktopLauncher2(root);
 
@@ -521,7 +531,7 @@ public class MainWin extends BaseDialog {
                 JOptionPane.showMessageDialog(this,MESSAGE_NO_DESKTOP_ICON);
             }
         }
-}//GEN-LAST:event_jMCreateDesktopIcon3ActionPerformed
+}//GEN-LAST:event_jMCreateDesktopIconActionPerformed
 
 
     private void updateFileendings()
@@ -606,9 +616,6 @@ public class MainWin extends BaseDialog {
     private javax.swing.JMenuItem jMAbout;
     private javax.swing.JMenuItem jMChangeLog;
     private javax.swing.JMenuItem jMCreateDesktopIcon;
-    private javax.swing.JMenuItem jMCreateDesktopIcon1;
-    private javax.swing.JMenuItem jMCreateDesktopIcon2;
-    private javax.swing.JMenuItem jMCreateDesktopIcon3;
     private javax.swing.JMenuItem jMPlugin;
     private javax.swing.JMenuItem jMQuit;
     private javax.swing.JMenuItem jMSettings;
@@ -672,6 +679,10 @@ public class MainWin extends BaseDialog {
         in.close();
 
         return equalFilesByMD5;
+    }
+
+    public void setCreateDesktopIconEnabled(boolean state) {
+        jMCreateDesktopIcon.setEnabled(state);
     }
 
 }

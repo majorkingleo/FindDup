@@ -10,6 +10,7 @@ import at.redeye.FrameWork.base.FrameWorkConfigDefinitions;
 import at.redeye.FrameWork.base.LocalRoot;
 import at.redeye.FrameWork.base.Setup;
 import at.redeye.FrameWork.widgets.StartupWindow;
+import java.io.File;
 
 /**
  *
@@ -75,21 +76,27 @@ public class ModuleLauncher extends BaseModuleLauncher {
        {
            if( Setup.is_win_system() )
            {
-                sb.append("c:\\windows ");
-                sb.append(root.MlM("c:\\programme") + " ");
-                sb.append("c:\\syswow64 ");
-                sb.append("c:\\RECYCLED ");
-                sb.append("c:\\Program Files ");
+                sb.append("c:\\windows"); sb.append(File.pathSeparator);
+                sb.append(root.MlM("c:\\programme")); sb.append(File.pathSeparator);
+                sb.append("c:\\syswow64"); sb.append(File.pathSeparator);
+                sb.append("c:\\RECYCLED"); sb.append(File.pathSeparator);
+                sb.append("c:\\Program Files"); sb.append(File.pathSeparator);
+                sb.append("c:\\Program Files (x86)"); sb.append(File.pathSeparator);
            }
            else
            {
-               sb.append("/usr ");
-               sb.append("/opt ");
-               sb.append("/lib ");
-               sb.append("/etc ");
+               sb.append("/usr"); sb.append(File.pathSeparator);
+               sb.append("/opt"); sb.append(File.pathSeparator);
+               sb.append("/lib"); sb.append(File.pathSeparator);
+               sb.append("/etc"); sb.append(File.pathSeparator);
            }
 
            root.getSetup().setLocalConfig(AppConfigDefinitions.SysDirs.getConfigName(), sb.toString());
        }
+    }
+
+    @Override
+    public void jnlpUpdated() {
+        mainwin.setCreateDesktopIconEnabled(true);
     }
 }

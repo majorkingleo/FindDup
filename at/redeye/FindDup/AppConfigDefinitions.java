@@ -10,6 +10,7 @@ import at.redeye.FrameWork.base.prm.bindtypes.DBConfig;
 import at.redeye.FrameWork.base.prm.impl.GlobalConfigDefinitions;
 import at.redeye.FrameWork.base.prm.impl.LocalConfigDefinitions;
 import at.redeye.FrameWork.base.prm.impl.PrmDefaultCheckSuite;
+import java.io.File;
 
 /**
  *
@@ -22,7 +23,7 @@ public class AppConfigDefinitions extends BaseAppConfigDefinitions {
     public static DBConfig FileTypesVideo = new DBConfig("FileTypesVideo","*.avi *.mpg *.mpeg *.mkv *.vob","Dateiendungen für Videos" );
     public static DBConfig FileTypesAudio = new DBConfig("FileTypesAudio","*.ogg *.mp3 *.wav","Dateiendungen für Musik" );
     public static DBConfig FileTypesOffice = new DBConfig("FileTypesOffice","*.doc *.pps *.xls","Dateiendungen für Office Dokumente" );
-    public static DBConfig SysDirs = new DBConfig("SystemDirs","c:\\windows c:\\programme","Systemverzeichnisse" );
+    public static DBConfig SysDirs = new DBConfig("SystemDirs","c:\\windows" + File.pathSeparator + "c:\\programme","Systemverzeichnisse getrennt durch " + File.pathSeparator );
 
     public static void registerDefinitions() {
 

@@ -233,7 +233,7 @@ public class SearchThread extends Thread implements FileFoundInterface
             if( dirs == null )
                 return true;
 
-            for( String dir : dirs.split("[ \t,;]") )
+            for( String dir : dirs.split(File.pathSeparator) )
             {
                 if( Setup.is_win_system() )
                     system_dirs.add(dir.toLowerCase());
