@@ -28,20 +28,23 @@ public class ModuleLauncher extends BaseModuleLauncher {
 
         root.setBaseLanguage("de");
 
-        // root.setWebStartUlr(getWebStartUrl("http://172.28.16.55/hotline/launch_new2.jnlp"));
+        root.setWebStartUlr(getWebStartUrl("http://redeye.hoffer.cx/FindDup/launch.jnlp"));
     }
 
     public void invoke()
     {
         if (splashEnabled()) {
             splash = new StartupWindow(
-                    "/at/redeye/FrameWork/base/resources/pictures/redeye.png");
+                    "/at/redeye/FindDup/resources/images/FindDup.png");
         }
 
         AppConfigDefinitions.registerDefinitions();
 	FrameWorkConfigDefinitions.registerDefinitions();
 
-        root.registerPlugin(new at.redeye.Plugins.ShellExec.Plugin());
+        if( Setup.is_win_system() )
+        {
+            root.registerPlugin(new at.redeye.Plugins.ShellExec.Plugin());
+        }
 
         configureLogging();
 
