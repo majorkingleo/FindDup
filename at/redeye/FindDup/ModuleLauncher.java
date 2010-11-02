@@ -89,6 +89,16 @@ public class ModuleLauncher extends BaseModuleLauncher {
                sb.append("/opt"); sb.append(File.pathSeparator);
                sb.append("/lib"); sb.append(File.pathSeparator);
                sb.append("/etc"); sb.append(File.pathSeparator);
+               sb.append("/boot"); sb.append(File.pathSeparator);
+               sb.append("/dev"); sb.append(File.pathSeparator);
+               sb.append("/tmp"); sb.append(File.pathSeparator);
+               sb.append("/sys"); sb.append(File.pathSeparator);
+               sb.append("/selinux"); sb.append(File.pathSeparator);
+               sb.append("/lib"); sb.append(File.pathSeparator);
+               sb.append("/lib64"); sb.append(File.pathSeparator);
+               sb.append("/proc"); sb.append(File.pathSeparator);
+               sb.append("/var"); sb.append(File.pathSeparator);
+               sb.append("/sbin"); sb.append(File.pathSeparator);
            }
 
            root.getSetup().setLocalConfig(AppConfigDefinitions.SysDirs.getConfigName(), sb.toString());

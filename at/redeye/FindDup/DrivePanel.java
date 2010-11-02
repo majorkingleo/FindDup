@@ -11,7 +11,9 @@
 
 package at.redeye.FindDup;
 
+import at.redeye.FrameWork.base.Setup;
 import at.redeye.FrameWork.utilities.StringUtils;
+import java.awt.GridLayout;
 import java.io.File;
 import java.util.LinkedList;
 import java.util.List;
@@ -42,11 +44,14 @@ public class DrivePanel extends javax.swing.JPanel {
     public DrivePanel() {
         initComponents();
 
-        File roots[] = File.listRoots();
+        File roots[] = getRoots();
+
+        if( roots.length > 8 )
+            setLayout(new GridLayout(0, 8));
 
         for( File root : roots )
         {
-            logger.info("root: " + root + ( root.exists() ? "exists" : "not exists"));
+            logger.info("root: " + root + ( root.exists() ? " exists" : " not exists"));
 
             if (root.exists()) {
                 JCheckBox cb = new JCheckBox(root.getPath());
@@ -63,7 +68,7 @@ public class DrivePanel extends javax.swing.JPanel {
     {
         synchronized (boxes) {
 
-            File roots[] = File.listRoots();
+            File roots[] = getRoots();
 
             for (File root : roots) {
                 // logger.info("root: " + root + ( root.exists() ? "exists" : "not exists"));
@@ -143,7 +148,7 @@ public class DrivePanel extends javax.swing.JPanel {
             res.append(dir.pathSeparator);
         }
 
-        File roots[] = File.listRoots();
+        File roots[] = getRoots();
 
         for( File root : roots )
         {
@@ -220,11 +225,34 @@ public class DrivePanel extends javax.swing.JPanel {
         }
     }
 
+    private File[] getRoots()
+    {
+        if( Setup.is_win_system() )
+            return File.listRoots();
+
+        List<File> roots = new LinkedList();
+
+        File root = File.listRoots()[0];
+
+        for( File sub : root.listFiles() )
+        {
+            if( sub.exists() && sub.isDirectory() && sub.canRead() )
+                roots.add(sub);
+        }
+
+        File root_array[] = new File[roots.size()];
+
+        for( int i = 0; i < root_array.length; i++ )
+            root_array[i] = roots.get(i);
+
+        return root_array;
+    }
+
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
         setBorder(javax.swing.BorderFactory.createTitledBorder("Laufwerke"));
-        setLayout(new java.awt.GridLayout());
+        setLayout(new java.awt.GridLayout(2, 0));
     }// </editor-fold>//GEN-END:initComponents
 
 

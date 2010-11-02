@@ -112,6 +112,9 @@ public class SearchThread extends Thread implements FileFoundInterface
 
                 for( Entry<Long,List<FileEntry>> entry : results.entrySet() )
                 {
+                     if( !continueWorking() )
+                         break;
+                     
                     List<FileEntry> files = entry.getValue();
 
                     if( files.size() > 1 )
@@ -178,8 +181,14 @@ public class SearchThread extends Thread implements FileFoundInterface
     {
         for( FileEntry first : files )
         {
+            if( !continueWorking() )
+               break;
+
             for( FileEntry second : files )
             {
+               if( !continueWorking() )
+                   break;
+
                 if( first.getName().equals(second.getName()) )
                     continue;
 

@@ -10,6 +10,7 @@ import java.io.File;
 import java.io.FileFilter;
 import java.io.FileNotFoundException;
 import java.io.FilenameFilter;
+import java.io.IOException;
 
 /**
  *
@@ -55,10 +56,16 @@ public class SearchForFiles
 
         if (subdirs != null) {
             for (File subdir : subdirs) {
-                if( file_found.diveIntoSubDir(subdir))
-                {
-                    if( !findFiles(subdir) )
-                        return false;
+                try {
+                    // do not follow symlinks
+                    if (subdir.getAbsolutePath().equals(subdir.getCanonicalPath())) {
+                        if (file_found.diveIntoSubDir(subdir)) {
+                            if (!findFiles(subdir)) {
+                                return false;
+                            }
+                        }
+                    }
+                } catch (IOException ex) {
                 }
             }
         }
