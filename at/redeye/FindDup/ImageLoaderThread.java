@@ -66,7 +66,7 @@ public class ImageLoaderThread extends Thread implements ImageLoader
        synchronized( workque )
        {
             workque.add( new Content(file, target_label));
-            //notify();
+            notify();
        }
     }
 
@@ -109,7 +109,10 @@ public class ImageLoaderThread extends Thread implements ImageLoader
 
            if (is_empty) {
                try {
-                   sleep(300);
+                  synchronized(this)
+                  {
+                      wait();
+                  }
                } catch (InterruptedException ex) {
                    
                }
