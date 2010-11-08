@@ -14,6 +14,6 @@ import javax.swing.JLabel;
  */
 public interface ImageLoader
 {
-    void loadIcon( File file, JLabel target_label );
+    void loadIcon( File file, JLabel target_label, String md5sum );
     int getDefaultWidth();
 }

@@ -7,6 +7,8 @@ package at.redeye.FindDup;
 
 import at.redeye.FrameWork.base.imagestorage.ImageUtils;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -49,7 +51,17 @@ public class DisplayEntry extends JLabel
 
         if( isImage(entries.get(0).getFile()) )
         {
-           il.loadIcon(entries.get(0).getFile(), this);
+           String md5sum = null; 
+           
+           try {
+            md5sum = entries.get(0).getMD5Sum();
+           } catch( FileNotFoundException ex ) {
+
+           } catch( IOException ex ) {
+
+           }
+
+           il.loadIcon(entries.get(0).getFile(), this,md5sum);
         }
 
         setVerticalTextPosition(TOP);

@@ -67,8 +67,7 @@ public class MainWin extends BaseDialog {
 
         jListErg.setCellRenderer(new ImageCellRenderer());
 
-        image_loader = new ImageLoaderThread(root,jListErg);
-        image_loader.start();
+        image_loader = new ImageLoaderThread(root,jListErg);        
 
         jCall.setSelected( StringUtils.isYes(root.getSetup().getLocalConfig(SELECTED_ALL, "false")) );
         jCimages.setSelected( StringUtils.isYes(root.getSetup().getLocalConfig(SELECTED_IMAGES, "true")) );
@@ -103,7 +102,7 @@ public class MainWin extends BaseDialog {
         {
             jMCreateDesktopIcon.setEnabled(false);
         }
-
+        
     }
 
     private void initMessages() {
@@ -165,7 +164,6 @@ public class MainWin extends BaseDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jLabel1 = new javax.swing.JLabel();
         jBSearch = new javax.swing.JButton();
         jLProgress = new javax.swing.JLabel();
         drivePanel = new at.redeye.FindDup.DrivePanel();
@@ -191,8 +189,6 @@ public class MainWin extends BaseDialog {
         jMPlugin = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-
-        jLabel1.setText("Suche und Finde doppelte Dateien auf deinem Computer");
 
         jBSearch.setText("Suche Starten");
         jBSearch.addActionListener(new java.awt.event.ActionListener() {
@@ -308,7 +304,7 @@ public class MainWin extends BaseDialog {
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 183, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 213, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -374,33 +370,30 @@ public class MainWin extends BaseDialog {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+            .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(jLProgress, javax.swing.GroupLayout.DEFAULT_SIZE, 440, Short.MAX_VALUE)
                         .addGap(125, 125, 125)
                         .addComponent(jBSearch))
-                    .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(drivePanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 700, Short.MAX_VALUE)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(drivePanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 700, Short.MAX_VALUE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(18, 18, 18)
-                .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addContainerGap()
                 .addComponent(drivePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLProgress)
                     .addComponent(jBSearch))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
         );
@@ -607,7 +600,6 @@ public class MainWin extends BaseDialog {
     private javax.swing.JCheckBox jCsystemPaths;
     private javax.swing.JCheckBox jCvideo;
     private javax.swing.JLabel jLProgress;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JList jListErg;
     private javax.swing.JMenuItem jMAbout;
     private javax.swing.JMenuItem jMChangeLog;
@@ -681,4 +673,12 @@ public class MainWin extends BaseDialog {
         jMCreateDesktopIcon.setEnabled(state);
     }
 
+    @Override
+    public void setVisible( boolean state )
+    {
+        super.setVisible(state);
+
+        if( !image_loader.isAlive() )
+            image_loader.start();
+    }
 }

@@ -8,8 +8,8 @@ package at.redeye.FindDup;
 import at.redeye.FrameWork.base.AutoLogger;
 import at.redeye.FrameWork.base.Root;
 import at.redeye.FrameWork.base.imagestorage.ImageUtils;
-import at.redeye.FrameWork.utilities.StringUtils;
 import java.io.File;
+import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 import javax.swing.Icon;
@@ -28,11 +28,13 @@ public class ImageLoaderThread extends Thread implements ImageLoader
         File file;
         JLabel target_label;
         Icon icon;
+        String md5sum;
 
-        public Content( File file, JLabel target_label )
+        public Content( File file, JLabel target_label, String md5sum )
         {
             this.file = file;
             this.target_label = target_label;
+            this.md5sum = md5sum;
         }
 
         public void run() {
@@ -51,21 +53,23 @@ public class ImageLoaderThread extends Thread implements ImageLoader
     JComponent parent_container;
     Root root;
     DefaultWidth default_width;
+    ImageCache cache;
 
     public ImageLoaderThread( Root root, JComponent parent_container )
     {
         this.parent_container = parent_container;
         this.root = root;
         default_width = new DefaultWidth(root);
+        cache = new ImageCache(root);
     }
 
-    public synchronized void loadIcon(File file, JLabel target_label)
+    public synchronized void loadIcon(File file, JLabel target_label, String md5sum)
     {
        cancel_loading = false;
 
        synchronized( workque )
        {
-            workque.add( new Content(file, target_label));
+            workque.add( new Content(file, target_label, md5sum));
             notify();
        }
     }
@@ -94,8 +98,24 @@ public class ImageLoaderThread extends Thread implements ImageLoader
 
                            @Override
                            public void do_stuff() throws Exception {
-                               content.icon = ImageUtils.loadScaledImageIcon(content.file.toString(),height,height,height);
-                               java.awt.EventQueue.invokeLater(content);
+
+                               try
+                               {
+                                   content.icon = cache.loadImage(content.md5sum);
+
+                                   if( content.icon != null  )
+                                    java.awt.EventQueue.invokeLater(content);
+
+                               } catch( IOException ex ) {
+
+                               }
+
+                               if( content.icon == null )
+                               {
+                                content.icon = ImageUtils.loadScaledImageIcon(content.file.toString(),height,height,height);
+                                java.awt.EventQueue.invokeLater(content);
+                                cache.saveImage(content.md5sum, content.icon);
+                               }
                            }
                        };
                    }

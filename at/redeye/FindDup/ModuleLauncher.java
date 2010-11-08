@@ -28,6 +28,7 @@ public class ModuleLauncher extends BaseModuleLauncher {
         root = new LocalRoot("FindDup", "Finde Duplikate");
 
         root.setBaseLanguage("de");
+        root.setDefaultLanguage("en");
 
         root.setWebStartUlr(getWebStartUrl("http://redeye.hoffer.cx/FindDup/launch.jnlp"));
     }
