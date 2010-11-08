@@ -7,7 +7,6 @@ package at.redeye.FindDup;
 
 import at.redeye.FrameWork.base.Root;
 import at.redeye.FrameWork.base.Setup;
-import java.awt.Image;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -16,7 +15,6 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import javax.swing.Icon;
-import javax.swing.ImageIcon;
 
 /**
  *
@@ -26,6 +24,8 @@ public class ImageCache
 {
     Root root;
     File cache_dir;
+    long timeout;
+    long now;
 
     public ImageCache( Root root )
     {
@@ -39,6 +39,9 @@ public class ImageCache
                 throw new RuntimeException( "Cannot create directory: " + cache_dir.getPath() );
             }
         }
+
+        now = System.currentTimeMillis();
+        timeout = now - 1000 * 60 * 60 * 24 * 7;
     }
 
 
@@ -49,8 +52,15 @@ public class ImageCache
 
         File img_file = new File( cache_dir.getPath() + "/" + name + ".ser");
 
-        if( img_file.exists() )
+        if( img_file.exists() ) {
+
+            if( timeout > img_file.lastModified() )
+            {
+                img_file.setLastModified(timeout);
+            }
+
             return;
+        }
 
         ObjectOutputStream out = new ObjectOutputStream( new FileOutputStream(img_file));
         out.writeObject(icon);

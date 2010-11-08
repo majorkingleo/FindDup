@@ -55,6 +55,7 @@ public class MainWin extends BaseDialog {
 
     SearchThread search_thread = null;
     ImageLoaderThread image_loader;
+    boolean clean_up_started = false;
 
     public MainWin(Root root)
     {
@@ -152,6 +153,13 @@ public class MainWin extends BaseDialog {
                @Override
                public void do_stuff() throws Exception {
                    saveResult(equalFilesByMD5);
+                   
+                   if( !clean_up_started )
+                   {
+                       CleanUpThread clean_up = new CleanUpThread(root);
+                       clean_up.start();
+                       clean_up_started = true;
+                   }
                }
            };
            setWaitCursor(false);
