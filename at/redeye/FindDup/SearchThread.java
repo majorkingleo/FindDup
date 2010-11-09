@@ -27,7 +27,7 @@ import java.util.Set;
  */
 public class SearchThread extends Thread implements FileFoundInterface
 {
-    private boolean stop_working;
+    private Boolean stop_working;
     private Root root;
     private String fileendings;
     private final Map<Long,List<FileEntry>> results = new HashMap();
@@ -69,7 +69,7 @@ public class SearchThread extends Thread implements FileFoundInterface
         return !stop_working;
     }
 
-    public void stopWorking()
+    public synchronized void stopWorking()
     {
         stop_working = true;
     }
@@ -230,6 +230,9 @@ public class SearchThread extends Thread implements FileFoundInterface
 
     public boolean diveIntoSubDir(File file)
     {
+        if( !continueWorking() )
+            return false;
+
         if( !ignoreSystemDirs )
             return true;
 
