@@ -35,6 +35,7 @@ public class SearchThread extends Thread implements FileFoundInterface
     private int fileCounter=0;
     private Map<String,FileEntry> equal_files = new HashMap();
     private Set<String> system_dirs;
+    private String progress_info = "";
 
     public enum STATE
     {
@@ -72,6 +73,11 @@ public class SearchThread extends Thread implements FileFoundInterface
     public synchronized void stopWorking()
     {
         stop_working = true;
+    }
+
+    public String getProgressInfo()
+    {
+        return progress_info;
     }
 
     @Override
@@ -184,10 +190,12 @@ public class SearchThread extends Thread implements FileFoundInterface
             if( !continueWorking() )
                break;
 
+            progress_info = first.getPath();            
+
             for( FileEntry second : files )
             {
                if( !continueWorking() )
-                   break;
+                   break;              
 
                 if( first.getName().equals(second.getName()) )
                     continue;
@@ -235,6 +243,8 @@ public class SearchThread extends Thread implements FileFoundInterface
 
         if( !ignoreSystemDirs )
             return true;
+
+        progress_info = file.getPath();
 
         if( system_dirs == null )
         {

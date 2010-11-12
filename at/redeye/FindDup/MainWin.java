@@ -52,6 +52,7 @@ public class MainWin extends BaseDialog {
     private static final String SELECTED_ROOTS = "SelectedRoots";
 
     private String MESSAGE_NO_DESKTOP_ICON;
+    private String MESSAGE_PROGRESS;
 
     SearchThread search_thread = null;
     ImageLoaderThread image_loader;
@@ -112,6 +113,7 @@ public class MainWin extends BaseDialog {
         }
 
         MESSAGE_NO_DESKTOP_ICON = MlM("Das Desktopicon konnte leider nicht erzeugt werden.");
+        MESSAGE_PROGRESS = MlM("Fortschritt:");
     }
 
     @Override
@@ -163,7 +165,13 @@ public class MainWin extends BaseDialog {
                }
            };
            setWaitCursor(false);
-       }       
+       }
+
+
+       if( search_thread != null )
+           jLInfo.setText( MESSAGE_PROGRESS + " " + search_thread.getProgressInfo() );
+       else
+           jLInfo.setText(MESSAGE_PROGRESS);
     }
 
 
@@ -186,6 +194,8 @@ public class MainWin extends BaseDialog {
         jPanel2 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jListErg = new javax.swing.JList();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        jLInfo = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMSettings = new javax.swing.JMenuItem();
@@ -304,7 +314,7 @@ public class MainWin extends BaseDialog {
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+            .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 666, Short.MAX_VALUE)
                 .addContainerGap())
@@ -312,9 +322,18 @@ public class MainWin extends BaseDialog {
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 213, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 193, Short.MAX_VALUE)
                 .addContainerGap())
         );
+
+        jScrollPane2.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
+        jScrollPane2.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        jScrollPane2.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
+
+        jLInfo.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
+        jLInfo.setText("Fortschritt:");
+        jLInfo.setEnabled(false);
+        jScrollPane2.setViewportView(jLInfo);
 
         jMenu1.setText("Programm");
 
@@ -381,11 +400,12 @@ public class MainWin extends BaseDialog {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 700, Short.MAX_VALUE)
                     .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(jLProgress, javax.swing.GroupLayout.DEFAULT_SIZE, 440, Short.MAX_VALUE)
-                        .addGap(125, 125, 125)
+                        .addComponent(jLProgress, javax.swing.GroupLayout.PREFERRED_SIZE, 199, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 366, Short.MAX_VALUE)
                         .addComponent(jBSearch))
                     .addComponent(drivePanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 700, Short.MAX_VALUE))
                 .addContainerGap())
@@ -401,8 +421,10 @@ public class MainWin extends BaseDialog {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLProgress)
                     .addComponent(jBSearch))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
 
@@ -607,6 +629,7 @@ public class MainWin extends BaseDialog {
     private javax.swing.JCheckBox jCoffice;
     private javax.swing.JCheckBox jCsystemPaths;
     private javax.swing.JCheckBox jCvideo;
+    private javax.swing.JLabel jLInfo;
     private javax.swing.JLabel jLProgress;
     private javax.swing.JList jListErg;
     private javax.swing.JMenuItem jMAbout;
@@ -621,6 +644,7 @@ public class MainWin extends BaseDialog {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTextField jTFileendings;
     // End of variables declaration//GEN-END:variables
 
