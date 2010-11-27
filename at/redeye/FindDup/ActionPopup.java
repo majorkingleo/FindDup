@@ -22,21 +22,39 @@ import javax.swing.JPopupMenu;
  */
 public class ActionPopup extends JPopupMenu
 {
-    public ActionPopup(final Root root, final DisplayEntry display_entry)
+    private Root root;
+
+    public ActionPopup(Root root_, final DisplayEntry display_entry)
     {
+        this.root = root_;
+
         JMenuItem menuItem = new JMenuItem(root.MlM("Alle Verzeichnisse öffnen"));
         
         menuItem.addActionListener(new ActionListener() {
 
-            public void actionPerformed(ActionEvent e)
-            {
+            public void actionPerformed(ActionEvent e) {
+
                 new AutoMBox(ActionPopup.class.getName()) {
 
                     @Override
                     public void do_stuff() throws Exception {
+
+
                         for (FileEntry entry : display_entry.getFileEntries()) {
-                            Process p = Runtime.getRuntime().exec("explorer \"" + entry.getFile().getParentFile().getPath() + "\"");
-                        }
+
+
+                            String open_command = getOpenCommand();
+
+                            String command = open_command + " \"" + entry.getFile().getParentFile().getPath() + "\"";
+                            logger.info(command);
+
+                            String command_array[] = new String[2];
+
+                            command_array[0] = open_command;
+                            command_array[1] = entry.getFile().getParentFile().getPath();
+
+                            Process p = Runtime.getRuntime().exec(command_array);
+                        } // for
                     }
                 };
             }
@@ -44,19 +62,31 @@ public class ActionPopup extends JPopupMenu
 
         add(menuItem);
 
-        JMenu submenu = new JMenu( "Verzeichnis Öffnen" );
+        JMenu submenu = new JMenu( root.MlM("Verzeichnis Öffnen") );
         add(submenu);
 
         for (final FileEntry entry : display_entry.getFileEntries()) {
             menuItem = new JMenuItem(entry.getFile().getParentFile().getPath());
             menuItem.addActionListener(new ActionListener() {
 
+                @Override
                 public void actionPerformed(ActionEvent e) {
                     new AutoMBox(ActionPopup.class.getName()) {
 
                         @Override
                         public void do_stuff() throws Exception {
-                            Process p = Runtime.getRuntime().exec("explorer \"" + entry.getFile().getParentFile().getPath() + "\"");
+
+                            String open_command = getOpenCommand();
+
+                            String command =  open_command + " \"" + entry.getFile().getParentFile().getPath() + "\"";
+                            logger.info(command);
+
+                            String command_array[] = new String[2];
+
+                            command_array[0] = open_command;                            
+                            command_array[1] = entry.getFile().getParentFile().getPath();
+
+                            Process p = Runtime.getRuntime().exec(command_array);
                         }
                     };
                 }
@@ -77,6 +107,7 @@ public class ActionPopup extends JPopupMenu
             final JMenuItem menuItem_open = new JMenuItem(entry.getFile().getPath());
             menuItem_open.addActionListener(new ActionListener() {
 
+                @Override
                 public void actionPerformed(ActionEvent e) {
 
                     if( Setup.is_win_system() )
@@ -86,7 +117,24 @@ public class ActionPopup extends JPopupMenu
                     }
                     else
                     {
-                        notImplemented();
+  
+                        new AutoMBox(ActionPopup.class.getName()) {
+
+                            @Override
+                            public void do_stuff() throws Exception {
+                                String open_command = getOpenCommand();
+
+                                String command = open_command + " \"" + entry.getFile().getPath() + "\"";
+                                logger.info(command);
+
+                                String command_array[] = new String[2];
+
+                                command_array[0] = open_command;
+                                command_array[1] = entry.getFile().getPath();
+
+                                Process p = Runtime.getRuntime().exec(command_array);
+                            }
+                        };
                     }
                 }
             });
@@ -115,6 +163,7 @@ public class ActionPopup extends JPopupMenu
             final JMenuItem menuItem_del = new JMenuItem(entry.getFile().getPath());
             menuItem_del.addActionListener(new ActionListener() {
 
+                @Override
                 public void actionPerformed(ActionEvent e) {
 
                     if( !entry.getFile().delete() )
@@ -143,5 +192,13 @@ public class ActionPopup extends JPopupMenu
         JOptionPane.showMessageDialog(null,
                 "Not Implemented yes", "Error",
                 JOptionPane.ERROR_MESSAGE);
+    }
+
+    private String getOpenCommand()
+    {
+        if( root.getSetup().is_win_system() )
+            return "explorer";
+
+        return root.getSetup().getLocalConfig(AppConfigDefinitions.OpenCommand);
     }
 }

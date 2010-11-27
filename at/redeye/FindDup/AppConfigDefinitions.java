@@ -24,6 +24,7 @@ public class AppConfigDefinitions extends BaseAppConfigDefinitions {
     public static DBConfig FileTypesAudio = new DBConfig("FileTypesAudio","*.ogg *.mp3 *.wav","Dateiendungen für Musik" );
     public static DBConfig FileTypesOffice = new DBConfig("FileTypesOffice","*.doc *.pps *.xls","Dateiendungen für Office Dokumente" );
     public static DBConfig SysDirs = new DBConfig("SystemDirs","c:\\windows" + File.pathSeparator + "c:\\programme","Systemverzeichnisse getrennt durch " + File.pathSeparator );
+    public static DBConfig OpenCommand = new DBConfig("OpenCommand", "kde-open", "Kommando für das öffnen einer Datei, oder eines Verzeichnisses");
 
     public static void registerDefinitions() {
 
@@ -35,6 +36,7 @@ public class AppConfigDefinitions extends BaseAppConfigDefinitions {
         addLocal(FileTypesOffice);
         addLocal(FileTypesVideo);
         addLocal(SysDirs);
+        addLocal(OpenCommand);
 
         GlobalConfigDefinitions.add_help_path("/at/redeye/FindDup/resources/Help/Params/");
         LocalConfigDefinitions.add_help_path("/at/redeye/FindDup/resources/Help/Params/");

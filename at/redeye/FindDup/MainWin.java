@@ -80,6 +80,7 @@ public class MainWin extends BaseDialog {
 
         jTFileendings.setText(root.getSetup().getLocalConfig(SELECTED_MASK, ""));
 
+        drivePanel.showSystemDrives(!jCsystemPaths.isSelected());
         drivePanel.setSelectedDirs(root.getSetup().getLocalConfig(SELECTED_ROOTS, drivePanel.getDirsAsString()));
 
         if( jTFileendings.getText().trim().isEmpty() )
@@ -182,7 +183,7 @@ public class MainWin extends BaseDialog {
 
         jBSearch = new javax.swing.JButton();
         jLProgress = new javax.swing.JLabel();
-        drivePanel = new at.redeye.FindDup.DrivePanel();
+        drivePanel = new at.redeye.FindDup.DrivePanel(root);
         jPanel1 = new javax.swing.JPanel();
         jTFileendings = new javax.swing.JTextField();
         jCimages = new javax.swing.JCheckBox();
@@ -263,6 +264,11 @@ public class MainWin extends BaseDialog {
 
         jCsystemPaths.setText("Systempfade Überspringen");
         jCsystemPaths.setToolTipText("Windows Interne Verzeichnisse nicht auswerten.");
+        jCsystemPaths.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jCsystemPathsActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -322,7 +328,7 @@ public class MainWin extends BaseDialog {
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 193, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 194, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -330,7 +336,7 @@ public class MainWin extends BaseDialog {
         jScrollPane2.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         jScrollPane2.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
 
-        jLInfo.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
+        jLInfo.setFont(new java.awt.Font("Dialog", 0, 12));
         jLInfo.setText("Fortschritt:");
         jLInfo.setEnabled(false);
         jScrollPane2.setViewportView(jLInfo);
@@ -551,6 +557,10 @@ public class MainWin extends BaseDialog {
             }
         }
 }//GEN-LAST:event_jMCreateDesktopIconActionPerformed
+
+    private void jCsystemPathsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCsystemPathsActionPerformed
+        drivePanel.showSystemDrives(!jCsystemPaths.isSelected());
+    }//GEN-LAST:event_jCsystemPathsActionPerformed
 
 
     private void updateFileendings()

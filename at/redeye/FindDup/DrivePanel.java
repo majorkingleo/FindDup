@@ -11,12 +11,15 @@
 
 package at.redeye.FindDup;
 
+import at.redeye.FrameWork.base.Root;
 import at.redeye.FrameWork.base.Setup;
 import at.redeye.FrameWork.utilities.StringUtils;
 import java.awt.GridLayout;
 import java.io.File;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 import javax.swing.JCheckBox;
@@ -30,6 +33,9 @@ public class DrivePanel extends javax.swing.JPanel {
 
     private static final Logger logger = Logger.getLogger(DrivePanel.class.getName());
     private final List<JCheckBox> boxes = new LinkedList();
+    private boolean show_system_drives = true; 
+    private Root root;
+    private final Set<String> system_dirs = new HashSet();
 
     private Timer autoRefreshTimer = new Timer();
     private TimerTask autoRefreshTask = new TimerTask() {
@@ -44,17 +50,35 @@ public class DrivePanel extends javax.swing.JPanel {
     public DrivePanel() {
         initComponents();
 
+        initCommon();
+    }
+    
+    public DrivePanel(Root root) {
+        initComponents();
+
+        this.root = root;
+        
+        initCommon();
+    }    
+    
+    public void setRoot( Root root )
+    {
+        this.root = root;
+    }
+
+    private void initCommon()
+    {
         File roots[] = getRoots();
 
         if( roots.length > 8 )
             setLayout(new GridLayout(0, 8));
 
-        for( File root : roots )
+        for( File root_file : roots )
         {
-            logger.info("root: " + root + ( root.exists() ? " exists" : " not exists"));
+            logger.info("root: " + root_file + ( root_file.exists() ? " exists" : " not exists"));
 
-            if (root.exists()) {
-                JCheckBox cb = new JCheckBox(root.getPath());
+            if (root_file.exists()) {
+                JCheckBox cb = new JCheckBox(root_file.getPath());
                 cb.setSelected(true);
                 add(cb);
                 boxes.add(cb);
@@ -70,28 +94,31 @@ public class DrivePanel extends javax.swing.JPanel {
 
             File roots[] = getRoots();
 
-            for (File root : roots) {
+            for (File root_file : roots) {
                 // logger.info("root: " + root + ( root.exists() ? "exists" : "not exists"));
 
                 boolean found = false;
 
+
                 for (JCheckBox box : boxes) {
-                    if (box.getText().equals(root.getPath())) {
+                    if (box.getText().equals(root_file.getPath())) {
                         found = true;
                         // Laufwerk wurde entfernt
-                        if (!root.exists()) {
+                        if (!root_file.exists()) {
                             remove(box);
                             boxes.remove(box);
-                            updateUI();
+                            updateUI();                            
                         }
 
                         break;
                     }
                 } // for
+                
+     
 
                 // Laufwerk wurde hinzugefügt
-                if (!found && root.exists()) {
-                    JCheckBox cb = new JCheckBox(root.getPath());
+                if (!found && root_file.exists()) {
+                    JCheckBox cb = new JCheckBox(root_file.getPath());
                     cb.setSelected(true);
                     add(cb);
                     boxes.add(cb);
@@ -99,28 +126,33 @@ public class DrivePanel extends javax.swing.JPanel {
                 }
             }
 
-            // un wenn einer den USB Stick wieder rausgezogen hat, dann
+            // und wenn einer den USB Stick wieder rausgezogen hat, dann
             // is der nicht mehr in der root liste, also umgekehrt suchen
 
+            boolean do_it_again = false;
 
+            do {
+                do_it_again = false;
+                
+                for (JCheckBox box : boxes) {
+                    boolean found = false;
 
-            for (JCheckBox box : boxes) {
-                boolean found = false;
+                    for (File root_file : roots) {
+                        if (root_file.getPath().equals(box.getText())) {
+                            found = true;
+                            break;
+                        }
+                    }
 
-                for (File root : roots) {
-                    if (root.getPath().equals(box.getText())) {
-                        found = true;
+                    if (!found) {
+                        remove(box);
+                        boxes.remove(box);
+                        updateUI();
+                        do_it_again = true;
                         break;
                     }
                 }
-
-                if (!found) {
-                    remove(box);
-                    boxes.remove(box);
-                    updateUI();
-                    break;
-                }
-            }
+            } while (do_it_again);
         }
     }
 
@@ -150,15 +182,15 @@ public class DrivePanel extends javax.swing.JPanel {
 
         File roots[] = getRoots();
 
-        for( File root : roots )
+        for( File root_file : roots )
         {
-            if( !root.exists() )
+            if( !root_file.exists() )
                 continue;
 
             boolean found = false;
             for( File dir : getDirs() )
             {
-                if( dir.getPath().equals(root.getPath()))
+                if( dir.getPath().equals(root_file.getPath()))
                 {
                     found = true;
                     break;
@@ -167,9 +199,9 @@ public class DrivePanel extends javax.swing.JPanel {
 
             if( !found )
             {
-                res.append(root.getPath());
+                res.append(root_file.getPath());
                 res.append("=false");
-                res.append(root.pathSeparator);
+                res.append(root_file.pathSeparator);
             }
         }
 
@@ -232,12 +264,21 @@ public class DrivePanel extends javax.swing.JPanel {
 
         List<File> roots = new LinkedList();
 
-        File root = File.listRoots()[0];
+        File root_file = File.listRoots()[0];
 
-        for( File sub : root.listFiles() )
-        {
-            if( sub.exists() && sub.isDirectory() && sub.canRead() )
-                roots.add(sub);
+        synchronized (system_dirs) {
+
+            for (File sub : root_file.listFiles()) {
+                if (sub.exists() && sub.isDirectory() && sub.canRead()) {
+                    if (!show_system_drives) {
+                        if (!system_dirs.contains(sub.toString())) {
+                            roots.add(sub);
+                        }
+                    } else {
+                        roots.add(sub);
+                    }
+                }
+            }
         }
 
         File root_array[] = new File[roots.size()];
@@ -246,6 +287,34 @@ public class DrivePanel extends javax.swing.JPanel {
             root_array[i] = roots.get(i);
 
         return root_array;
+    }
+
+    public void showSystemDrives( boolean state )
+    {
+        if( root == null )
+            throw new RuntimeException("Root is null");
+
+        synchronized (system_dirs) {
+
+            system_dirs.clear();
+
+            String dirs = root.getSetup().getLocalConfig(AppConfigDefinitions.SysDirs);
+
+            if (dirs != null) {
+                for (String dir : dirs.split(File.pathSeparator)) {
+                    if (Setup.is_win_system()) {
+                        system_dirs.add(dir.toLowerCase());
+                    } else {
+                        system_dirs.add(dir);
+                    }
+                }
+            }
+
+            show_system_drives = state;
+
+        }
+
+        doAutoRefresh();
     }
 
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
