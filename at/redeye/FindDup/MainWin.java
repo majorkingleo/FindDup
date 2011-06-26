@@ -64,7 +64,7 @@ public class MainWin extends BaseDialog {
 
         initComponents();
 
-        helper.autoRefreshTimer.schedule(helper.autoRefreshTask, 500, 500);
+        helper.getAutoRefreshTimer().schedule(helper.autoRefreshTask, 500, 500);
         jLProgress.setText("");
 
         jListErg.setCellRenderer(new ImageCellRenderer());

@@ -25,7 +25,7 @@ public class ModuleLauncher extends BaseModuleLauncher {
     {
         super( args );
 
-        root = new LocalRoot("FindDup", "Finde Duplikate");
+        root = new LocalRoot("FindDup", "Finde Duplikate", false, true);
 
         root.setBaseLanguage("de");
         root.setDefaultLanguage("en");
